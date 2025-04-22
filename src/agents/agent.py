@@ -5,9 +5,7 @@ from langchain.agents import (Tool, AgentExecutor, create_react_agent,)
 from langchain.memory import ConversationBufferMemory
 from langchain import hub
 from huggingface_hub import login
-from tools.web_scraper import fetch_sites, visit
-from tools.relevance_search import fetch_information
-from tools.data import fetch_model
+from tools.web_scraper import fetch_sites
 import asyncio
 from langchain.globals import set_llm_cache
 from langchain_community.cache import InMemoryCache
@@ -43,16 +41,6 @@ tools = [
         name="Search",
         func=lambda x: asyncio.run(fetch_sites.ainvoke(x)),
         description="A search engine optimized for comprehensive, accurate, and trusted results. Useful for when you need to answer questions about current events. This returns only the answer - not the original source data.",
-    ),
-    Tool(
-        name="OpenLink",
-        func=lambda url: asyncio.run(visit.ainvoke({"query": {"link": url}})),
-        description="Extracts webpage content from URL. Input: string URL. Returns: extracted text content"
-    ),
-    Tool(
-        name="DBSearch",
-        func=lambda query, top_k=6: asyncio.run(fetch_information.ainvoke({"query": query, "top_k": top_k})),
-        description="Search database for relevant documents. Contents of websearches are cached in the database, so that they could be accessed through this tool"
     ),
 ]
 

@@ -1,9 +1,6 @@
 from langchain_community.tools import DuckDuckGoSearchResults
 from langchain_core.tools import tool
 import trafilatura
-from tools.preprocess import CustomDocumentLoader, split_text
-from tools.data import save_embeddings
-import asyncio
 
 @tool("Search",parse_docstring=True)
 async def fetch_sites(query : str) -> str:
@@ -23,7 +20,7 @@ async def fetch_sites(query : str) -> str:
     content=""
     for row in ret[:top_k]:
         row["content"]=await visit.ainvoke({"query":row})
-        content=content+'\n\nTitle:'+row['title']#+'\n\nLink:'+row['link']
+        content=content+'\n\nTitle:'+row['title']+'\n\nLink:'+row['link']
         if row["content"]!=None:
             content=content+'\n\nContent:'+row["content"]
         else:
@@ -34,7 +31,7 @@ async def fetch_sites(query : str) -> str:
     ret = await search.ainvoke(query,backend="news")
     for row in ret[:top_k]:
         row["content"]=await visit.ainvoke({"query":row})
-        content=content+'\n\nTitle:'+row['title']#+'\n\nLink:'+row['link']
+        content=content+'\n\nTitle:'+row['title']+'\n\nLink:'+row['link']
         if row["content"]!=None:
             content=content+'\n\nContent:'+row["content"]
         else:
@@ -56,12 +53,4 @@ async def visit(query : dict) -> str:
     """
     content = trafilatura.fetch_url(query["link"])
     query["content"]=trafilatura.extract(content,favor_precision=True, favor_recall=True)
-    if query["content"]==None:
-        return query["content"]
-    loader = CustomDocumentLoader(query)
-    documents=[]
-    async for doc in loader.lazy_load():
-        documents.append(doc)
-    chunks = await split_text(documents, 2048, 512)
-    await save_embeddings(chunks)
     return query["content"]

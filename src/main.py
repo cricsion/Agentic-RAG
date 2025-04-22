@@ -1,9 +1,10 @@
 import streamlit as st
 from langchain_core.prompts import ChatPromptTemplate
-from agents.agent import rag_agent_executor, memory
+from agents.agent import rag_agent_executor
 import datetime
 import asyncio
 from streamlit import dialog as st_dialog
+import time
 
 # Enable detailed error messages in the Streamlit client console
 st.set_option("client.showErrorDetails", True)
@@ -27,11 +28,11 @@ def error_fallback(e):
 # Main asynchronous function for handling the chat interface and responses
 async def main():
     # Configure page title and icon, and display the main title
-    st.set_page_config(page_title="LinkMind", page_icon=":link::brain:")
-    st.title(":link::brain: LinkMind")       
+    st.set_page_config(page_title="AgenticRAG", page_icon=":mag::books:")
+    st.title(":mag::books: AgenticRAG")       
 
     # Get user's chat input
-    prompt = st.chat_input("Message LinkMind...")
+    prompt = st.chat_input("Message AgenticRAG...")
 
     # Initialize session history for messages if it doesn't exist
     if "messages" not in st.session_state:
@@ -59,8 +60,10 @@ async def main():
                     query = prompt_template.format(current_time=formatted_now, question=prompt)
 
                     # Invoke the agent asynchronously using version "v2"
+                    start=time.time()
                     response = await rag_agent_executor.ainvoke({"input": query}, version="v2")
-                    output_text = response["output"]
+                    total_time=round(time.time()-start);
+                    output_text = f"*Thought for {total_time} seconds*\n\n"+response["output"]
                 except Exception as e:
                     # On error, use fallback mechanism and set output_text to the error
                     output_text = e

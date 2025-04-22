@@ -1,32 +1,26 @@
-# LinkMind
-![demo](assets/demo.gif?raw=true)
+# Agentic RAG
 
-LinkMind is an interactive conversation application powered by a modern Langchain-based agent that integrates natural language processing, web search, document scraping, and vector search. Built using Streamlit for its user interface, LinkMind leverages the Hugging Face endpoint along with a custom FAISS vector store to deliver context-rich, intelligent responses.
+This "agentic" RAG is an interactive conversation application powered by a modern Langchain-based agent that integrates natural language processing, and web search. Built using Streamlit for its user interface, it leverages the Hugging Face endpoint to deliver context-rich, intelligent responses.
 
 ## Overview
 
-LinkMind is designed to:
+This Agentic RAG is designed to:
 - Answer user questions in detail while explaining the reasoning process.
-- Utilize a reactive chat agent powered by a chain-of-thought prompt based on React.
+- Utilize a ReAct chat agent powered by a chain-of-thought prompt based on ReAct.
 - Seamlessly integrate with web search and content extraction tools.
-- Cache and store knowledge using an in-memory FAISS vector store enhanced with Hugging Face embeddings.
 - Provide error recovery and session memory, preserving conversation context over time.
 
 ## Features
 
 - **Chat Interface:** A modern Streamlit-based chat UI that mimics conversational apps.
 - **Chain-of-Thought Reasoning:** Uses a multi-step reactive agent workflow to generate detailed and accurate answers.
-- **Tool Integration:** Includes tools for web search, content extraction, and database queries:
+- **Tool Integration:** Includes tools for web search and content extraction:
   - *Search Tool:* Uses DuckDuckGo for retrieving web and news results.
-  - *OpenLink Tool:* Extracts and processes webpage content.
-  - *DBSearch Tool:* Retrieves relevant documents from a FAISS-based vector store.
-- **Embeddings & Vector Store:** Utilizes Hugging Face’s sentence transformer to compute embeddings and stores document chunks in FAISS.
 - **Caching & Memory:** Employs an in-memory cache to optimize LLM calls and conversation memory to maintain context throughout sessions.
-- **Custom Document Processing:** Implements a custom document loader and text splitter to handle diverse file formats and metadata.
 
 ## Architecture
 
-The architecture of LinkMind combines LangChain’s modular framework with Streamlit’s client-server model. Below is an architectural diagram showcasing the inner working of the agent:
+The architecture combines LangChain’s modular framework with Streamlit’s client-server model. Below is an architectural diagram showcasing the inner working of the agent:
 
 ![Architecture of the Agent](assets/architecture.png)
 
@@ -35,8 +29,8 @@ The architecture of LinkMind combines LangChain’s modular framework with Strea
 1. **Clone the Repository:**
 
    ```
-   git clone https://github.com/cricsion/LinkMind.git
-   cd LinkMind
+   git clone https://github.com/cricsion/Agentic-RAG.git
+   cd Agentic-RAG
    ```
 
 2. **Create and Activate a Virtual Environment:**
@@ -80,11 +74,11 @@ The architecture of LinkMind combines LangChain’s modular framework with Strea
    streamlit run src/main.py
    ```
 
-2. **Chat with LinkMind:**
+2. **Chat with the Agent:**
 
    - Upon launching, you will find an interactive chat input.
-   - Enter a query and watch as the agent uses its integrated tools (web search, document extraction, and vector search) to formulate its answer.
-   - The agent process embeds a “chain-of-thought” style output making sure that each step is clear and it only finalizes its answer after all tool outputs are processed.
+   - Enter a query and watch as the agent uses its integrated tool (web search) to formulate its answer.
+   - The agent process embeds a "chain-of-thought" style output making sure that each step is clear and it only finalizes its answer after all tool outputs are processed.
 
 ## Technical Details
 
@@ -94,10 +88,6 @@ The architecture of LinkMind combines LangChain’s modular framework with Strea
 - **Caching & Memory:**  
   - An in-memory cache is set up to optimize LLM calls.
   - ConversationBufferMemory is used to store chat history and maintain context.
-
-- **Document Processing & Vector Store:**  
-  - Custom loaders and splitters process various file inputs.
-  - FAISS is used alongside a Hugging Face embeddings model ("sentence-transformers/all-MiniLM-L6-v2") to index and search document chunks efficiently.
 
 - **Error Handling:**  
   An error recovery function is in place using Streamlit’s dialog components. In case of errors, users are offered an option to reset the session.
